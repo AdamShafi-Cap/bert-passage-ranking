@@ -45,7 +45,6 @@ def load_models():
     except:
         b = SentenceTransformer('stsb-distilbert-base')
         pickle.dump(b, open('./models/dbert.pkl', 'wb'))
-
     try:
         c = pickle.load(open('./models/rbert.pkl', 'rb'))
     except:
@@ -135,7 +134,7 @@ def summarize(text, model, n=1):
     return result
 
 def get_embeddings(embeddings_option):
-    
+
 
     return pd.read_pickle(options[embeddings_option][0])
 
