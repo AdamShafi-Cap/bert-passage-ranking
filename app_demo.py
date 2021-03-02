@@ -37,23 +37,28 @@ def load_models():
         b = pickle.load(open('./models/dbert.pkl', 'rb'))
     except:
         b = SentenceTransformer('stsb-distilbert-base')
-        pickle.dump(b, open('../demo_app/models/dbert.pkl', 'wb'))
+        pickle.dump(b, open('./models/dbert.pkl', 'wb'))
     try:
         c = 'na'#pickle.load(open('./models/rbert.pkl', 'rb'))
     except:
-        b = SentenceTransformer('stsb-roberta-large')
-        pickle.dump(b, open('../demo_app/models/rbert.pkl', 'wb'))       
+        c = SentenceTransformer('stsb-roberta-large')
+        pickle.dump(c, open('./models/rbert.pkl', 'wb'))       
     try:
         d = pickle.load(open('./models/qbert.pkl', 'rb'))
     except:
-        b = SentenceTransformer('msmarco-distilbert-base-v2')
-        pickle.dump(b, open('../demo_app/models/qbert.pkl', 'wb'))       
+        d = SentenceTransformer('msmarco-distilbert-base-v2')
+        pickle.dump(d, open('./models/qbert.pkl', 'wb'))       
     return a,b,c,d   
 
 
 @st.cache(hash_funcs={preshed.maps.PreshMap:id, cymem.cymem.Pool:id}, allow_output_mutation=True)#hash_funcs={preshed.maps.PreshMap: lambda x: 1, cymem.cymem.Pool:      lambda x: 1})
 def load_summarizer():
-    return pickle.load(open('./models/summarizer.pkl', 'rb'))
+    try:
+        a = pickle.load(open('./models/summarizer.pkl', 'rb'))
+    except:
+        a = Summarizer()
+        pickle.dump(a, open('./models/summarizer.pkl', 'wb')) 
+    return a
 
 @st.cache()
 def load_pdf(file)->str:
