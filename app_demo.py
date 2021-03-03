@@ -106,9 +106,9 @@ def get_articles(text:str)->pd.Series:
          .loc[46:]
          .loc[lambda x: x.astype(bool)]
          .loc[lambda x: x.apply(len)>10]
-         #.str.replace('\s+',' ')
+         .str.replace('\s+',' ')
          #.str.replace('\n\n','\n')
-         .str.replace(r'\.\s*$', '. <br />')
+         #.str.replace(r'\.\s*$', '. <br />')
          .drop_duplicates()
         )
     
@@ -166,6 +166,8 @@ def ab_sum(q,t):
 ### APP
 st.title('BERT Passage Scoring')
 
+st.sidebar.write('Models were pre-trained by researchers at Technische Universitat Darmstadt.')
+
 # ALWAYS
 use,dbert,rbert,qbert = load_models()
 
@@ -174,7 +176,8 @@ options = {#'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'DistillBERT':['./embeddings/distilbert.pkl',dbert], 
            'RoBERTa Large':['./embeddings/robert.pkl',rbert],
            'DistillBERT Q&A':['./embeddings/distilbertqa.pkl',qbert],
-           'Select a model...':['','']}
+           #'Select a model...':['','']
+           }
 
 
 model_desc = {'Universal Sentence Encoder': '''
@@ -205,7 +208,7 @@ s = get_articles(text)
 
 col1, col2 = st.beta_columns(2)
 with col1:
-    embeddings_option = st.selectbox('Which model?', selectbox_list, index=3)
+    embeddings_option = st.selectbox('Which model?', selectbox_list, index=2)
 
 with col2:
     st.write(f"About {embeddings_option}:")
