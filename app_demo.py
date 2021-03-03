@@ -23,10 +23,14 @@ from summarizer import Summarizer
 # BERT based models for document search
 from sentence_transformers import SentenceTransformer
 import pickle
+import pickle5
 
 # GPT-2
 from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
 import tensorflow as tf
+
+#model_gpt = TFGPT2LMHeadModel.from_pretrained('distilgpt2')
+#tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 st.set_page_config(layout="wide")
 file, text, q = None, None, None
@@ -35,7 +39,6 @@ stqdm.pandas()
 
 @st.cache(allow_output_mutation=True)
 def load_models():
-
     
     #a = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     a = None
@@ -128,19 +131,18 @@ def ask(q:str, X:pd.DataFrame, s:pd.Series, n: int, model, embeddings_option)->p
     
     return s.loc[sorted_index.index].head(n)
 
-#@st.cache()
-def summarize(text, model, n=1):
-    result = model(text, num_sentences=n)
+@st.cache()
+def summarize(text, n=1):
+    result = summarizer_model(text, num_sentences=n)
     return result
 
 def get_embeddings(embeddings_option):
+    with open(options[embeddings_option][0], 'rb') as file:
+        ans = pickle5.load(file)
+    return ans
 
 
-    return pd.read_pickle(options[embeddings_option][0])
 
-
-model_gpt = TFGPT2LMHeadModel.from_pretrained('distilgpt2')
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 def ab_sum(q,t):
     in_text = t+' '+q
@@ -173,18 +175,31 @@ options = {'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'DistillBERT Q&A':['./embeddings/distilbertqa.pkl',qbert],
            'Select a model...':['','']}
 
+
+model_desc = {'Universal Sentence Encoder': './embeddings/use.pkl',
+           'DistillBERT':'./embeddings/distilbert.pkl', 
+           'RoBERTa Large':'./embeddings/robert.pkl',
+           'DistillBERT Q&A':'./embeddings/distilbertqa.pkl',
+           'Select a model...':''}
+
+
 selectbox_list = list(options.keys())
 
 summarizer_model = load_summarizer()
 
-
-
-    
 file = 'DRAFT_UK-EU_Comprehensive_Free_Trade_Agreement.pdf'
 
 text = load_pdf(file)
 s = get_articles(text)
-embeddings_option = st.selectbox('Which model?', selectbox_list, index=4)
+
+col1, col2 = st.beta_columns(2)
+with col1:
+    embeddings_option = st.selectbox('Which model?', selectbox_list, index=4)
+
+with col2:
+    st.write("About:")
+    st.write(model_desc[embeddings_option])
+
 q = st.text_input('What is your query?')
 
 
@@ -193,15 +208,17 @@ if q:
     ans = ask(q, X=X, s=s, n=3, model=options[embeddings_option][1],embeddings_option=embeddings_option)
     for i, t in enumerate(ans):
         with st.beta_expander(f'ARTICLE {t.split()[0]}'):
-            if len(t.split('. '))>3:
-                summary = summarize(t, summarizer_model, 1)
-                ab_summary = ab_sum(q,t)
-                st.success(summary)
-               #t = ". ".join([f"**{sent}**" if sent in summary.split(". ") else sent for sent in t.split(". ")])   
-            else: 
-                ab_summary=None
-            st.write(t)
-            if ab_summary:
-                st.warning(ab_summary)
+            #if len(t.split('. '))>3:
+            summary = summarize(t, 1)
+            #ab_summary = ab_sum(q,t)
+            st.success(summary)
+            t = ". ".join([f"__**{sentence}**__" 
+                                if summary.find(sentence) != -1
+                                else sentence 
+                                for sentence in t.split(". ")])   
+            
+            st.write(f"ARTICLE {t}")
+            #if ab_summary:
+            #    st.warning(ab_summary)
 
 
