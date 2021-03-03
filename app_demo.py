@@ -205,7 +205,7 @@ s = get_articles(text)
 
 col1, col2 = st.beta_columns(2)
 with col1:
-    embeddings_option = st.selectbox('Which model?', selectbox_list, index=4)
+    embeddings_option = st.selectbox('Which model?', selectbox_list, index=3)
 
 with col2:
     st.write(f"About {embeddings_option}:")
