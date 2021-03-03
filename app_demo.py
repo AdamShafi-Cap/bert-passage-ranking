@@ -23,7 +23,7 @@ from summarizer import Summarizer
 # BERT based models for document search
 from sentence_transformers import SentenceTransformer
 import pickle
-import pickle5
+#import pickle5
 
 # GPT-2
 from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
@@ -40,7 +40,7 @@ stqdm.pandas()
 def load_models():
     
     #a = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-    a = None
+    a = 'a'
 
     try:
         b = pickle.load(open('./models/dbert.pkl', 'rb'))
@@ -106,9 +106,9 @@ def get_articles(text:str)->pd.Series:
          .loc[46:]
          .loc[lambda x: x.astype(bool)]
          .loc[lambda x: x.apply(len)>10]
-         #.str.replace('\s+',' ')
+         .str.replace('\s+',' ')
          #.str.replace('\n\n','\n')
-         .str.replace(r'\.\s*$', '. <br />')
+         #.str.replace(r'\.\s*$', '. <br />')
          .drop_duplicates()
         )
     
@@ -119,10 +119,10 @@ def get_articles(text:str)->pd.Series:
 @st.cache()
 def ask(q:str, X:pd.DataFrame, s:pd.Series, n: int, model, embeddings_option)->pd.Series:
     
-    if embeddings_option == selectbox_list[0]:
-        embedding = np.array(model([q])[0])
-    else:
-        embedding = np.array(model.encode([q])[0])
+    #if embeddings_option == selectbox_list[0]:
+        #embedding = np.array(model([q])[0])
+    #else:
+    embedding = np.array(model.encode([q])[0])
         
     sorted_index = (X
                     .apply(lambda row: np.dot(row, embedding), axis=1)
@@ -139,7 +139,7 @@ def summarize(text, n=1):
 
 def get_embeddings(embeddings_option):
     with open(options[embeddings_option][0], 'rb') as file:
-        ans = pickle5.load(file)
+        ans = pickle.load(file)
     return ans
 
 
@@ -177,19 +177,17 @@ options = {#'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'Select a model...':['','']}
 
 
-model_desc = {'Universal Sentence Encoder': '''
-PASS
-''',
+model_desc = {#'Universal Sentence Encoder': '''PASS''',
            'DistillBERT':'''
 Developed by Huggingface as a faster, more efficient version of BERT using a compression technique called distillation. 
-In this app, this model is pretrained* on datasets aimed at training models to find similar text.
+In this app, this model is pretrained on datasets aimed at training models to find similar text.
            ''', 
            'RoBERTa Large':'''
 Developed by Facebook as a larger, more optimized version of BERT. When released, this model improved BERT’s scores on a variety of benchmarks. 
-In this app, this model is pretrained* on datasets aimed at training models to find similar text.
+In this app, this model is pretrained on datasets aimed at training models to find similar text.
            ''',
            'DistillBERT Q&A':'''
-This version is pretrained* on Microsoft’s Q&A dataset which includes millions of question and answer pairs from web search.
+This version is pretrained on Microsoft’s Q&A dataset which includes millions of question and answer pairs from web search.
            ''',
            'Select a model...':''}
 
@@ -205,7 +203,7 @@ s = get_articles(text)
 
 col1, col2 = st.beta_columns(2)
 with col1:
-    embeddings_option = st.selectbox('Which model?', selectbox_list, index=4)
+    embeddings_option = st.selectbox('Which model?', selectbox_list, index=3)
 
 with col2:
     st.write(f"About {embeddings_option}:")
@@ -226,8 +224,7 @@ if q:
             t = ". ".join([f"__**{sentence}**__" 
                                 if summary.find(sentence) != -1
                                 else sentence 
-                                for sentence in t.split(". ")])   
-            
+                                for sentence in t.split(". ")])  
             st.write(f"ARTICLE {t}")
             #if ab_summary:
             #    st.warning(ab_summary)
