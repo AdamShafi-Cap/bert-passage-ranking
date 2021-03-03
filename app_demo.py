@@ -170,7 +170,7 @@ st.title('BERT Passage Scoring')
 use,dbert,rbert,qbert = load_models()
 
 
-options = {'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
+options = {#'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'DistillBERT':['./embeddings/distilbert.pkl',dbert], 
            'RoBERTa Large':['./embeddings/robert.pkl',rbert],
            'DistillBERT Q&A':['./embeddings/distilbertqa.pkl',qbert],
