@@ -36,7 +36,6 @@ st.set_page_config(layout="wide")
 file, text, q = None, None, None
 stqdm.pandas()
 
-
 @st.cache(allow_output_mutation=True)
 def load_models():
     
@@ -107,7 +106,9 @@ def get_articles(text:str)->pd.Series:
          .loc[46:]
          .loc[lambda x: x.astype(bool)]
          .loc[lambda x: x.apply(len)>10]
-         .str.replace('\s+',' ')
+         #.str.replace('\s+',' ')
+         #.str.replace('\n\n','\n')
+         .str.replace(r'\.\s*$', '. <br />')
          .drop_duplicates()
         )
     
@@ -176,10 +177,20 @@ options = {'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'Select a model...':['','']}
 
 
-model_desc = {'Universal Sentence Encoder': './embeddings/use.pkl',
-           'DistillBERT':'./embeddings/distilbert.pkl', 
-           'RoBERTa Large':'./embeddings/robert.pkl',
-           'DistillBERT Q&A':'./embeddings/distilbertqa.pkl',
+model_desc = {'Universal Sentence Encoder': '''
+PASS
+''',
+           'DistillBERT':'''
+Developed by Huggingface as a faster, more efficient version of BERT using a compression technique called distillation. 
+In this app, this model is pretrained* on datasets aimed at training models to find similar text.
+           ''', 
+           'RoBERTa Large':'''
+Developed by Facebook as a larger, more optimized version of BERT. When released, this model improved BERT’s scores on a variety of benchmarks. 
+In this app, this model is pretrained* on datasets aimed at training models to find similar text.
+           ''',
+           'DistillBERT Q&A':'''
+This version is pretrained* on Microsoft’s Q&A dataset which includes millions of question and answer pairs from web search.
+           ''',
            'Select a model...':''}
 
 
@@ -197,7 +208,7 @@ with col1:
     embeddings_option = st.selectbox('Which model?', selectbox_list, index=4)
 
 with col2:
-    st.write("About:")
+    st.write(f"About {embeddings_option}:")
     st.write(model_desc[embeddings_option])
 
 q = st.text_input('What is your query?')
