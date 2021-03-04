@@ -166,8 +166,6 @@ def ab_sum(q,t):
 ### APP
 st.title('BERT Passage Scoring')
 
-st.sidebar.write('Models were pre-trained by researchers at Technische Universitat Darmstadt.')
-
 # ALWAYS
 use,dbert,rbert,qbert = load_models()
 
@@ -176,8 +174,7 @@ options = {#'Universal Sentence Encoder': ['./embeddings/use.pkl',use],
            'DistillBERT':['./embeddings/distilbert.pkl',dbert], 
            'RoBERTa Large':['./embeddings/robert.pkl',rbert],
            'DistillBERT Q&A':['./embeddings/distilbertqa.pkl',qbert],
-           #'Select a model...':['','']
-           }
+           'Select a model...':['','']}
 
 
 model_desc = {#'Universal Sentence Encoder': '''PASS''',
@@ -206,8 +203,7 @@ s = get_articles(text)
 
 col1, col2 = st.beta_columns(2)
 with col1:
-    embeddings_option = st.selectbox('Which model?', selectbox_list, index=2)
-
+    embeddings_option = st.selectbox('Which model?', selectbox_list, index=3)
 
 with col2:
     st.write(f"About {embeddings_option}:")
@@ -232,5 +228,3 @@ if q:
             st.write(f"ARTICLE {t}")
             #if ab_summary:
             #    st.warning(ab_summary)
-
-
