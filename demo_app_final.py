@@ -2,7 +2,11 @@
 import pandas as pd
 import numpy as np
 import tensorflow_hub as hub
+<<<<<<< HEAD
 from stqdm import stqdm
+=======
+#from stqdm import stqdm
+>>>>>>> d08ae3cf872cc5e36a0de6f1f1edece086386553
 
 # Streamlit
 import streamlit as st
@@ -26,8 +30,13 @@ import pickle
 #import pickle5
 
 # GPT-2
+<<<<<<< HEAD
 from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
 import tensorflow as tf
+=======
+#from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
+#import tensorflow as tf
+>>>>>>> d08ae3cf872cc5e36a0de6f1f1edece086386553
 
 #model_gpt = TFGPT2LMHeadModel.from_pretrained('distilgpt2')
 #tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
