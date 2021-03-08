@@ -35,7 +35,7 @@ import pickle
 
 st.set_page_config(layout="wide")
 file, text, q = None, None, None
-stqdm.pandas()
+#stqdm.pandas()
 
 @st.cache(allow_output_mutation=True)
 def load_models():
@@ -135,6 +135,7 @@ def ask(q:str, X:pd.DataFrame, s:pd.Series, n: int, model, embeddings_option)->p
 
 @st.cache()
 def summarize(text, n=1):
+    text = text.replace(';','.')
     result = summarizer_model(text, num_sentences=n)
     return result
 
@@ -165,7 +166,16 @@ def ab_sum(q,t):
     return tokenizer.decode(generated_text_samples[0], skip_special_tokens=True)[start:]
 
 ### APP
-st.title('BERT Passage Scoring')
+
+st.title('Project Pico: Natural Language Processing (NLP) Demo')
+st.header('Applications of BERT Models')
+st.write('''
+BERT is an open-source model to process natural language developed by Google. It was designed to help computers understand the meaning of ambiguous language in text by using surrounding text to establish context.''')
+st.write('''
+This app uses BERT models trained to specific tasks to demonstrate the model's ability to a) find relevant passages in a document, given a query and b) find representative sentences within the passage to create a summary''')
+st.write('-'*50)
+
+
 
 # ALWAYS
 use,dbert,rbert,qbert = load_models()
@@ -218,14 +228,16 @@ if q:
     ans = ask(q, X=X, s=s, n=3, model=options[embeddings_option][1],embeddings_option=embeddings_option)
     for i, t in enumerate(ans):
         with st.beta_expander(f'ARTICLE {t.split()[0]}'):
-            #if len(t.split('. '))>3:
+            #if len(t.split('. '))>2:
             summary = summarize(t, 1)
-            #ab_summary = ab_sum(q,t)
+            if summary == '':
+                summary = 'See full article'
+        #ab_summary = ab_sum(q,t)
             st.success(summary)
             t = ". ".join([f"__**{sentence}**__" 
-                                if summary.find(sentence) != -1
-                                else sentence 
-                                for sentence in t.split(". ")])  
+                            if summary.find(sentence) != -1
+                            else sentence 
+                            for sentence in t.replace(';','.').split(". ")])  
             st.write(f"ARTICLE {t}")
             #if ab_summary:
             #    st.warning(ab_summary)
