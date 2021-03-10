@@ -19,7 +19,7 @@ import io
 
 # Summarization using extractive bert
 from summarizer import Summarizer, sentence_handler
-import tensorflow_hub as hub
+#import tensorflow_hub as hub
 
 # BERT based models for document search
 from sentence_transformers import SentenceTransformer

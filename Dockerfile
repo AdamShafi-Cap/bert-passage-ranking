@@ -5,6 +5,7 @@ COPY app_aws_ver.py /workdir
 RUN mkdir /workdir/embeddings
 RUN mkdir /workdir/models
 COPY /embeddings/*.pkl /workdir/embeddings
+COPY DRAFT_UK-EU_Comprehensive_Free_Trade_Agreement.pdf /workdir
 
 EXPOSE 8501
 
