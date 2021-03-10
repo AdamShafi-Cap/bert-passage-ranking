@@ -1,4 +1,4 @@
-# bert-passage-ranking
+# Bert Paragraph Search and Summarization
 
 ## Build With Docker
 
@@ -48,11 +48,12 @@ Regular BERT was trained on over 3m words from a dataset of books and English Wi
 
 The table below summarises tasks, models and fine tuning.
 
-Task	BERT Variation	Fine Tuning
-Summarisation	Base BERT	None
-Searching	DistillBERT	Stanford similarity dataset
-Searching	DstillBERT Q&A	Stanford similarity dataset
-Searching	RoBERTa (large)	Microsoft Q&A Dataset
+|  Task	          |  BERT Variation       |  Fine Tuning                  |
+|  -------------  |  ------------------   |  ---------------------------  |
+|  Summarisation  |	 Base BERT        |  None                         |
+|  Searching      |	 DistillBERT      |  Stanford similarity dataset  |
+|  Searching      |	 DstillBERT Q&A   |  Stanford similarity dataset  |
+|  Searching      |	 RoBERTa (large)  |  Microsoft Q&A Dataset        |
 
 
 
