@@ -3,6 +3,7 @@
 ## Build With Docker
 
 docker build . -t bert-passage
+
 docker run -d -p 8501:8501 bert-passage
 
 ## Using the app
