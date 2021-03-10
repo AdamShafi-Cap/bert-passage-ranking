@@ -25,7 +25,7 @@ When you select a model, it will process the document. You can now enter your qu
 ### Upload a csv file
 
 This skips the need to process the PDF and allows more control of paragraph sizes. To do this, just upload a csv with 1 row per paragraph and no column titles/headers. Your paragraphs should be in the first column of the file.
-As for PDFs, your file will be processed once you select a model. Recommend length is 50-300 rows.
+As for PDFs, your file will be processed once you select a model.
 
 ### Models used
 
@@ -44,7 +44,7 @@ This app uses 3 BERT variations.
 
 Regular BERT was trained on over 3m words from a dataset of books and English Wikipedia. In this app, fine tuned versions of the above models are used.
 
-1.	For RoBERTa and DistillBERT, we have used versions specifically trained on task 1 by researchers at the Technical University of Darmstadt above using several Stanford datasets.
+1.	For RoBERTa and DistillBERT, we have used versions specifically trained on task 1 by researchers at the Technical University of Darmstadt using several Stanford datasets.
 2.	We have also used a version of DistillBERT trained by the same researchers on a Microsoft dataset of question and answer pairs. This model should be particularly good at answering questions.
 
 The table below summarises tasks, models and fine tuning.
