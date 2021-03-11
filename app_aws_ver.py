@@ -36,7 +36,7 @@ st.header('Applications of BERT Models')
 st.write('''
 BERT is an open-source model for processing natural language, developed by Google. It was designed to help computers understand the meaning of ambiguous language in text by using surrounding text to establish context.''')
 st.write('''
-This app uses BERT models trained to specific tasks to demonstrate the model's ability to a) find relevant passages in a document, given a query and b) find representative sentences within the passage to create a summary. To use it, either upload a document or use the example Brexit document. You must then select a model from the list of BERT variants and enter a query. The app will use the model you select to search the query against the document. It then uses a separate BERT model to write a summary using sentences from the paragraph.''' )
+This app uses BERT models trained for specific tasks to demonstrate the model's ability to a) find relevant passages in a document, given a query and b) find representative sentences within the passage to create a summary. To use it, either upload a document or use the example Brexit document. You must then select a model from the list of BERT variants and enter a query. The app will use the model you select to search the query against the document. It then uses a separate BERT model to write a summary using sentences from the paragraph.''' )
 st.write('-'*50)
 
 model_desc = {
@@ -158,7 +158,7 @@ def ask(q:str, X:pd.DataFrame, s:pd.DataFrame, n: int, model)->pd.Series:
 
 @st.cache()
 def summarize(text, n=1):
-    result = summarizer_model(text, num_sentences=n)
+    result = summarizer_model(text, num_sentences=n,min_length=0)
     return result
 
 @st.cache(suppress_st_warning=True)
@@ -200,11 +200,11 @@ selectbox_list = list(options.keys())
 ### Choose Method ###
 col1, col2 = st.beta_columns(2)
 with col1:
-    method = st.radio('Choose one...',['Upload a PDF','Upload a csv','Brexit Trade Agreement'])
+    method = st.radio('Choose one...',['Upload a PDF (non-sensitive)','Upload a csv (non-sensitive)','Brexit Trade Agreement'])
 
 ### PDF Document ###
 
-if method == 'Upload a PDF':
+if method == 'Upload a PDF (non-sensitive)':
     file=None
     with col1:
         st.write('Upload a PDF document which will the app will attempt to split into paragraphs. You can remove the first few pages, using the button to the right, to prevent titles and contents pages from being included. A good document size is 40-60 pages and larger documents will take longer to process. ')
@@ -245,7 +245,7 @@ if method == 'Upload a PDF':
             ans = ask(q, X=X, s=s, n=3, model=options[embeddings_option][1])
             for i,t in ans.values:
                 with st.beta_expander(f'PAGE {i}'):
-                    if len(t)>40:
+                    if len(t)>45:
                         summary = summarize(t, 1)
                         st.success(summary)
                         st.write(bold_sentences(t,summary))
@@ -254,7 +254,7 @@ if method == 'Upload a PDF':
     
 ### CSV Document ###
 
-elif method == 'Upload a csv':
+elif method == 'Upload a csv (non-sensitive)':
     file=None
     with col1:
         st.write('Upload a csv file with 1 column and no column names, each row should contain a separate paragraph. The model will match your query to each row and return the best matches. A good size is 200-400 rows.')
@@ -291,7 +291,7 @@ elif method == 'Upload a csv':
             ans = ask(q, X=X, s=s, n=3, model=options[embeddings_option][1])
             for i, t in zip(ans.index,ans):
                 with st.beta_expander(f'ROW NUMBER: {i}'):
-                    if len(t)>50:
+                    if len(t)>45:
                         summary = summarize(t, 1)
                         st.success(summary)
                         st.write(bold_sentences(t,summary))
@@ -325,7 +325,8 @@ elif method == 'Brexit Trade Agreement':
         ans = ask(q, X=X, s=s, n=3, model=options[embeddings_option][1])
         for i, t in enumerate(ans):
             with st.beta_expander(f'ARTICLE {t.split()[0]}'):
-                if len(t)>40:
+                if len(t)>45:
+                    t=t.replace(';','.')
                     summary = summarize(t, 1)
                     st.success(summary)
                     t = bold_sentences(t,summary)  
