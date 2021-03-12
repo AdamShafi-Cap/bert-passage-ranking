@@ -175,12 +175,12 @@ def get_embeddings(s:pd.Series, embeddings_option)->pd.DataFrame:
     return s.progress_apply(model.encode).apply(pd.Series)
 
 
-def get_embeddings_brexit(embeddings_option,ttl=ttl):
+def get_embeddings_brexit(embeddings_option):
     with open(options[embeddings_option][0], 'rb') as file:
         ans = pickle.load(file)
     return ans
 
-def bold_sentences(text,summary,ttl=ttl):
+def bold_sentences(text,summary):
     handler =  sentence_handler.SentenceHandler()
     bold = " ".join([f"__**{sentence}**__" 
                     if summary.find(sentence) != -1
